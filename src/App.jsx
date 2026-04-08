@@ -228,14 +228,14 @@ export default function GlossyCharm() {
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-    script.onload = () => window.emailjs.init('v_FP9BminRIEUaEt6');
+    script.onload = () => window.emailjs.init('6QNOVVYQAKJAEOKKGXI5OCPMOJAFV3RZOEQREAEC4GZ5A2PV35ABETOSVHUERKIA');
     document.head.appendChild(script);
   }, []);
 
   const sendConfirmationEmail = (bookingData) => {
     if (!window.emailjs) return;
     // Email to client
-    window.emailjs.send('service_glossycharm', 'template_hdckkjm', {
+    window.emailjs.send('service_glossycharm', 'template_p40z98u', {
       to_name:    bookingData.name,
       to_email:   bookingData.email,
       service:    bookingData.service,
