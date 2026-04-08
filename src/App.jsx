@@ -228,14 +228,14 @@ export default function GlossyCharm() {
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-    script.onload = () => window.emailjs.init('6QNOVVYQAKJAEOKKGXI5OCPMOJAFV3RZOEQREAEC4GZ5A2PV35ABETOSVHUERKIA');
+    script.onload = () => window.emailjs.init('v_FP9BminRIEUaEt6');
     document.head.appendChild(script);
   }, []);
 
   const sendConfirmationEmail = (bookingData) => {
     if (!window.emailjs) return;
     // Email to client
-    window.emailjs.send('service_glossycharm', 'template_p40z98u', {
+    window.emailjs.send('service_glossycharm', 'template_hdckkjm', {
       to_name:    bookingData.name,
       to_email:   bookingData.email,
       service:    bookingData.service,
@@ -277,13 +277,18 @@ export default function GlossyCharm() {
   const btnO = { ...btnP, background:'transparent', color:C.t1, border:`1.5px solid ${C.t1}` };
   const btnG = { ...btnP, background:'transparent', color:C.mid, border:`1px solid ${C.b2}`, padding:'9px 20px', fontSize:12 };
 
+  const scrollTo = (id) => {
+    if (view !== 'home') { setView('home'); setTimeout(() => { const el = document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 100); }
+    else { const el = document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }
+  };
+
   // ── NAV ─────────────────────────────────────────────────────────────────
   const Nav = () => (
     <nav style={{position:'fixed',top:0,left:0,right:0,zIndex:200,background:'rgba(253,248,244,.97)',backdropFilter:'blur(12px)',borderBottom:`1px solid ${C.b2}`,padding:'0 5%',height:68,display:'flex',alignItems:'center',justifyContent:'space-between',gap:16}}>
       <div style={{cursor:'pointer'}} onClick={()=>setView('home')}><Logo /></div>
       <div style={{display:'flex',gap:20,alignItems:'center',flexWrap:'wrap'}}>
-        {view==='home' && t.nav.map((n,i)=>(
-          <span key={i} style={{color:C.mid,fontSize:12,letterSpacing:'0.1em',textTransform:'uppercase',cursor:'pointer',fontWeight:500}}>{n}</span>
+        {view==='home' && [['services', t.nav[0]], ['about', t.nav[1]], ['contact', t.nav[2]]].map(([id,label])=>(
+          <span key={id} onClick={()=>scrollTo(id)} style={{color:C.mid,fontSize:12,letterSpacing:'0.1em',textTransform:'uppercase',cursor:'pointer',fontWeight:500}}>{label}</span>
         ))}
         <button className="btn" style={btnP} onClick={()=>goBook(null)}>{t.bookNow}</button>
         <button className="btn" style={btnG} onClick={()=>{setView('admin');setAdminAuth(false);setAdminPass('');}}>{t.ownerLogin}</button>
@@ -325,7 +330,7 @@ export default function GlossyCharm() {
       </div>
 
       {/* Services */}
-      <div style={{background:C.b1,padding:'90px 5%'}}>
+      <div id="services" style={{background:C.b1,padding:'90px 5%'}}>
         <div style={{maxWidth:1100,margin:'0 auto'}}>
           <div style={{textAlign:'center',marginBottom:52}}>
             <div style={{fontSize:11,letterSpacing:'0.22em',color:C.t1,textTransform:'uppercase',fontWeight:500,marginBottom:12}}>✦ {t.svcTitle} ✦</div>
@@ -356,7 +361,7 @@ export default function GlossyCharm() {
       </div>
 
       {/* About */}
-      <div style={{padding:'90px 5%'}}>
+      <div id="about" style={{padding:'90px 5%'}}>
         <div style={{maxWidth:1000,margin:'0 auto',display:'grid',gridTemplateColumns:'1fr 1fr',gap:64,alignItems:'center'}}>
           <div>
             <div style={{fontSize:11,letterSpacing:'0.22em',color:C.t1,textTransform:'uppercase',fontWeight:500,marginBottom:16}}>✦ {t.aboutBadge} ✦</div>
@@ -387,7 +392,7 @@ export default function GlossyCharm() {
       </div>
 
       {/* Footer */}
-      <div style={{background:C.dark,color:'white',padding:'64px 5% 32px',fontFamily:"'Inter',sans-serif"}}>
+      <div id="contact" style={{background:C.dark,color:'white',padding:'64px 5% 32px',fontFamily:"'Inter',sans-serif"}}>
         <div style={{maxWidth:1000,margin:'0 auto'}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',flexWrap:'wrap',gap:40,marginBottom:48}}>
             <div>
@@ -406,7 +411,7 @@ export default function GlossyCharm() {
               <div style={{fontSize:11,letterSpacing:'0.2em',color:C.t2,textTransform:'uppercase',marginBottom:12,fontWeight:500}}>Contact & Social</div>
               <div style={{fontSize:14,color:`${C.t3}cc`,lineHeight:2.2}}>
                 <a href="mailto:nailsbygossycharm@gmail.com" style={{color:`${C.t3}cc`,textDecoration:'none'}}>📧 nailsbygossycharm@gmail.com</a><br/>
-                <a href="https://instagram.com/nailsbygossycharm" target="_blank" rel="noreferrer" style={{color:`${C.t3}cc`,textDecoration:'none'}}>📸 Instagram</a><br/>
+                <a href="https://instagram.com/glossy_charme_beauty" target="_blank" rel="noreferrer" style={{color:`${C.t3}cc`,textDecoration:'none'}}>📸 @glossy_charme_beauty</a><br/>
                 <a href="https://facebook.com/nailsbygossycharm" target="_blank" rel="noreferrer" style={{color:`${C.t3}cc`,textDecoration:'none'}}>📘 Facebook</a>
               </div>
             </div>
