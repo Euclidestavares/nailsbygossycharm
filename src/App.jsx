@@ -223,13 +223,51 @@ export default function GlossyCharm() {
   const today = new Date().toISOString().split('T')[0];
 
   const goBook = (svc) => { setSelSvc(svc); setStep(1); setConfirmed(false); setSelDate(null); setSelTime(''); setView('booking'); window.scrollTo(0,0); };
+
+  // Load EmailJS
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+    script.onload = () => window.emailjs.init('6QNOVVYQAKJAEOKKGXI5OCPMOJAFV3RZOEQREAEC4GZ5A2PV35ABETOSVHUERKIA');
+    document.head.appendChild(script);
+  }, []);
+
+  const sendConfirmationEmail = (bookingData) => {
+    if (!window.emailjs) return;
+    // Email to client
+    window.emailjs.send('service_glossycharm', 'template_p40z98u', {
+      to_name:    bookingData.name,
+      to_email:   bookingData.email,
+      service:    bookingData.service,
+      date:       fmtDate(bookingData.date),
+      time:       bookingData.time,
+      price:      `£${bookingData.price}`,
+      deposit:    `£${(bookingData.price * 0.2).toFixed(2)}`,
+      balance:    `£${(bookingData.price * 0.8).toFixed(2)}`,
+      address:    '2 Carnation Road, Oldham OL4 5QD',
+    }).catch(console.error);
+    // Notification to owner
+    window.emailjs.send('service_glossycharm', 'template_hdckkjm', {
+      client:     bookingData.name,
+      service:    bookingData.service,
+      date:       fmtDate(bookingData.date),
+      time:       bookingData.time,
+      price:      `£${bookingData.price}`,
+      client_email: bookingData.email,
+      client_phone: bookingData.phone,
+    }).catch(console.error);
+  };
+
   const submitBooking = () => {
     setPaying(true);
     setTimeout(() => {
-      setBookings(prev => [...prev, {
-        id: prev.length + 1, name: client.name, service: tSvc(selSvc),
+      const newBooking = {
+        id: bookings.length + 1, name: client.name, email: client.email,
+        phone: client.phone, service: tSvc(selSvc),
         date: fmtISO(selDate), time: selTime, price: selSvc.price, status: 'pending'
-      }]);
+      };
+      setBookings(prev => [...prev, newBooking]);
+      sendConfirmationEmail({ ...newBooking, date: selDate });
       setPaying(false); setConfirmed(true);
     }, 2200);
   };
@@ -677,10 +715,10 @@ export default function GlossyCharm() {
   // ── RENDER ───────────────────────────────────────────────────────────────
   return (
     <div style={{fontFamily:"'Inter',sans-serif",color:C.dark,minHeight:'100vh',background:C.cream}}>
-      <Nav/>
-      {view==='home'    && <Home/>}
-      {view==='booking' && <Booking/>}
-      {view==='admin'   && <Admin/>}
+      {Nav()}
+      {view==='home'    && Home()}
+      {view==='booking' && Booking()}
+      {view==='admin'   && Admin()}
     </div>
   );
 }
